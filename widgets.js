@@ -8,15 +8,14 @@ dialog{max-height:94vh;overflow:auto}dialog form{max-height:90vh;overflow:auto}.
 @media(max-width:700px){.world-grid{grid-template-columns:1fr}.world-widget{padding:15px}.clock{font-size:46px}.weather-updated{display:none}dialog{width:96vw;max-height:92vh}.wide{width:96vw}.set-row{grid-template-columns:38px minmax(0,1fr) minmax(0,1fr) auto}.set-row input{min-width:0;padding:9px 7px}}
 `;
 const style=document.createElement('style');style.textContent=css;document.head.appendChild(style);
-
 const welcome='Welcome Mr. and Mrs. Dahlman';
 function keepWelcome(){const home=document.querySelector('.page#dashboard.active');if(home&&window.title)window.title.textContent=welcome}
 keepWelcome();document.addEventListener('click',e=>{if(e.target.closest('[data-page="dashboard"],[data-go="dashboard"]'))setTimeout(keepWelcome,0)});
-
 const places={norway:{lat:59.9139,lon:10.7522,tz:'Europe/Oslo'},cebu:{lat:10.3157,lon:123.8854,tz:'Asia/Manila'}};
 const weatherText={0:['Clear','☀️'],1:['Mostly clear','🌤️'],2:['Partly cloudy','⛅'],3:['Cloudy','☁️'],45:['Fog','🌫️'],48:['Fog','🌫️'],51:['Light drizzle','🌦️'],53:['Drizzle','🌦️'],55:['Heavy drizzle','🌧️'],61:['Light rain','🌦️'],63:['Rain','🌧️'],65:['Heavy rain','🌧️'],71:['Light snow','🌨️'],73:['Snow','🌨️'],75:['Heavy snow','❄️'],80:['Rain showers','🌦️'],81:['Rain showers','🌧️'],82:['Heavy showers','⛈️'],95:['Thunderstorm','⛈️'],96:['Thunderstorm','⛈️'],99:['Thunderstorm','⛈️']};
 function updateClocks(){const now=new Date();document.getElementById('norwayClock').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:places.norway.tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);document.getElementById('cebuClock').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:places.cebu.tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now)}
 async function getWeather(key){const p=places[key],url=`https://api.open-meteo.com/v1/forecast?latitude=${p.lat}&longitude=${p.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,is_day&timezone=${encodeURIComponent(p.tz)}`;const r=await fetch(url);if(!r.ok)throw new Error('Weather request failed');const j=await r.json(),c=j.current,[label,dayIcon]=weatherText[c.weather_code]||['Weather','🌡️'],icon=c.is_day?dayIcon:(c.weather_code<=2?'🌙':dayIcon);document.getElementById(`${key}Icon`).textContent=icon;document.getElementById(`${key}Temp`).textContent=`${Math.round(c.temperature_2m)}°`;document.getElementById(`${key}Weather`).textContent=label;document.getElementById(`${key}Feels`).textContent=`${Math.round(c.apparent_temperature)}°`;document.getElementById(`${key}Humidity`).textContent=`${c.relative_humidity_2m}%`}
 async function refreshWeather(){const status=document.getElementById('weatherUpdated');try{await Promise.all([getWeather('norway'),getWeather('cebu')]);status.textContent='Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}catch(e){console.error(e);status.textContent='Weather unavailable';['norway','cebu'].forEach(k=>document.getElementById(`${k}Weather`).textContent='Try again later')}}
 updateClocks();setInterval(updateClocks,1000);refreshWeather();setInterval(refreshWeather,15*60*1000);
+const syncScript=document.createElement('script');syncScript.src='public-sync.js?v=20260729-1';document.body.appendChild(syncScript);
 })();
