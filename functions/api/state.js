@@ -11,16 +11,8 @@ function json(value, status = 200) {
   });
 }
 
-function authorized(request, env) {
-  const expected = env.DASHBOARD_TOKEN;
-  if (!expected) return false;
-  const authorization = request.headers.get("authorization") || "";
-  return authorization === `Bearer ${expected}`;
-}
-
-export async function onRequestGet({ request, env }) {
+export async function onRequestGet({ env }) {
   if (!env.DB) return json({ error: "D1 binding DB is missing" }, 500);
-  if (!authorized(request, env)) return json({ error: "Unauthorized" }, 401);
 
   const row = await env.DB
     .prepare("SELECT data, updated_at FROM dashboard_state WHERE id = 1")
@@ -37,7 +29,6 @@ export async function onRequestGet({ request, env }) {
 
 export async function onRequestPut({ request, env }) {
   if (!env.DB) return json({ error: "D1 binding DB is missing" }, 500);
-  if (!authorized(request, env)) return json({ error: "Unauthorized" }, 401);
 
   let body;
   try {
