@@ -7,7 +7,7 @@
     {
       "binding": "DB",
       "database_name": "dahlman-dashboard-db",
-      "database_id": "PASTE_YOUR_D1_DATABASE_ID_HERE",
+      "database_id": "a9cea7de-20dc-4fd8-956a-00a220ece629",
       "migrations_dir": "migrations"
     }
   ]
