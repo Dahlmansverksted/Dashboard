@@ -19,4 +19,6 @@ async function refreshWeather(){const status=document.getElementById('weatherUpd
 updateClocks();setInterval(updateClocks,1000);refreshWeather();setInterval(refreshWeather,15*60*1000);
 const syncScript=document.createElement('script');syncScript.src='public-sync.js?v=20260729-1';document.body.appendChild(syncScript);
 const slideshowScript=document.createElement('script');slideshowScript.src='slideshow-v3.js?v=20260730-2';document.body.appendChild(slideshowScript);
+const v4css=document.createElement('link');v4css.rel='stylesheet';v4css.href='dashboard-v4.css?v=20260730-3';document.head.appendChild(v4css);
+const v4=document.createElement('script');v4.src='dashboard-v4.js?v=20260730-3';document.body.appendChild(v4);
 })();
