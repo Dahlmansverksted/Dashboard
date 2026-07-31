@@ -26,5 +26,7 @@ function addScript(src){return new Promise(resolve=>{const el=document.createEle
   await addScript('dashboard-v5.js?v=20260730-1');
   await addCss('dashboard-v6.css?v=20260731-2');
   await addScript('dashboard-v6.js?v=20260731-2');
+  await addCss('dashboard-v7.css?v=20260731-1');
+  await addScript('dashboard-v7.js?v=20260731-1');
 })();
 })();
