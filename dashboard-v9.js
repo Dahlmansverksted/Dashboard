@@ -1,6 +1,16 @@
 (()=>{
 'use strict';
 
+function ensureV9Styles(){
+ if(document.getElementById('dashboard-v9-styles'))return;
+ const link=document.createElement('link');
+ link.id='dashboard-v9-styles';
+ link.rel='stylesheet';
+ link.href='/dashboard-v9.css?v=9';
+ document.head.appendChild(link);
+}
+ensureV9Styles();
+
 const DAY_MS=86400000;
 const startOfToday=()=>{const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate(),12)};
 const safeDate=s=>new Date(`${s}T12:00:00`);
@@ -84,6 +94,7 @@ function renderDatesV9(){
 }
 
 function applyV9(){
+ ensureV9Styles();
  const dateGrid=document.getElementById('dateList');if(dateGrid)dateGrid.classList.add('v9-date-grid');
  const workoutList=document.getElementById('workoutList');if(workoutList)workoutList.classList.add('v9-workout-grid');
  renderDatesV9();
