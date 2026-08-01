@@ -21,7 +21,17 @@ function ensureHead(){
      .shell>aside .brand{min-width:0!important;overflow:hidden!important}
      .shell>aside .brand span{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
      .shell>aside .brand-logo{display:block!important;flex:0 0 46px!important;width:46px!important;height:46px!important;object-fit:contain!important;border-radius:12px!important;background:transparent!important}
-     @media(max-width:700px){.shell>aside .brand-logo{width:42px!important;height:42px!important;flex-basis:42px!important}}
+     .v8-calendar-combined{min-height:0!important}
+     .v8-calendar-combined-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+     .v8-calendar-part{min-width:0;padding:4px 2px}
+     .v8-calendar-part+.v8-calendar-part{border-left:1px solid rgba(216,176,139,.16);padding-left:20px}
+     .v8-calendar-part-title{margin:0 0 10px;color:var(--oak2,#c89b73);font-size:10px;letter-spacing:.15em;font-weight:500;text-transform:uppercase}
+     .v8-calendar-combined #nextCountdown{margin-top:0}
+     @media(max-width:700px){
+       .shell>aside .brand-logo{width:42px!important;height:42px!important;flex-basis:42px!important}
+       .v8-calendar-combined-grid{grid-template-columns:1fr;gap:16px}
+       .v8-calendar-part+.v8-calendar-part{border-left:0;border-top:1px solid rgba(216,176,139,.16);padding-left:2px;padding-top:18px}
+     }
    `;
    document.head.appendChild(style);
  }
@@ -57,6 +67,41 @@ function mergeDateIntoWeather(){
  const eyebrow=textWrap.querySelector('small');if(eyebrow)eyebrow.textContent='DATE · TIME · WEATHER';
  const heading=textWrap.querySelector('h3');if(heading)heading.textContent='Norway and Philippines';
 }
+function mergeCalendarWidgets(){
+ const daysCard=document.querySelector('#dashboard .card.snus');
+ const countdown=document.getElementById('nextCountdown');
+ const countdownCard=countdown?.closest('article.card');
+ if(!daysCard||!countdown||!countdownCard||daysCard===countdownCard)return;
+ const head=daysCard.querySelector(':scope>.head');
+ if(!head)return;
+ daysCard.classList.add('v8-calendar-combined');
+ const headText=head.querySelector('div');
+ const eyebrow=headText?.querySelector('small');
+ const heading=headText?.querySelector('h3');
+ if(eyebrow)eyebrow.textContent='CALENDAR';
+ if(heading)heading.textContent='Calendar';
+ let viewAll=head.querySelector('[data-go="dates"]');
+ if(!viewAll){
+   viewAll=countdownCard.querySelector('[data-go="dates"]');
+   if(viewAll)head.appendChild(viewAll);
+ }
+ let grid=daysCard.querySelector(':scope>.v8-calendar-combined-grid');
+ if(!grid){
+   grid=document.createElement('div');
+   grid.className='v8-calendar-combined-grid';
+   const daysPart=document.createElement('section');
+   daysPart.className='v8-calendar-part v8-calendar-days';
+   daysPart.innerHTML='<h4 class="v8-calendar-part-title">Days since</h4>';
+   [...daysCard.children].filter(el=>el!==head&&el!==grid).forEach(el=>daysPart.appendChild(el));
+   const countdownPart=document.createElement('section');
+   countdownPart.className='v8-calendar-part v8-calendar-countdown';
+   countdownPart.innerHTML='<h4 class="v8-calendar-part-title">Next countdown</h4>';
+   countdownPart.appendChild(countdown);
+   grid.append(daysPart,countdownPart);
+   daysCard.appendChild(grid);
+ }
+ countdownCard.remove();
+}
 function ensureCarousel(){
  const page=document.getElementById('dashboard'),hero=page?.querySelector('.hero');if(!page||!hero)return;
  const heroTitle=hero.querySelector('h2');if(heroTitle)heroTitle.textContent='Welcome';
@@ -80,7 +125,7 @@ function equalBudget(){
 function removeDuplicateNav(){
  document.querySelectorAll('body>nav,main+nav,.mobile-bottom-nav').forEach(el=>{if(!el.closest('aside'))el.remove()});
 }
-function apply(){ensureHead();ensureDaily();brand();removeQuickAdd();ensureCarousel();mergeDateIntoWeather();mobileMenu();equalBudget();removeDuplicateNav()}
+function apply(){ensureHead();ensureDaily();brand();removeQuickAdd();ensureCarousel();mergeDateIntoWeather();mergeCalendarWidgets();mobileMenu();equalBudget();removeDuplicateNav()}
 const run=()=>requestAnimationFrame(apply);
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 const oldRender=window.render;if(typeof oldRender==='function')window.render=function(){ensureDaily();const r=oldRender.apply(this,arguments);run();return r};
