@@ -6,6 +6,7 @@ function clocks(){const n=new Date();for(const [key,p] of Object.entries(places)
 async function weather(key){const p=places[key],r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${p.lat}&longitude=${p.lon}&current=temperature_2m,weather_code,is_day&timezone=${encodeURIComponent(p.tz)}`);if(!r.ok)throw Error('weather');const c=(await r.json()).current,[text,day]=labels[c.weather_code]||['Weather','🌡️'];const icon=c.is_day?day:(c.weather_code<=2?'🌙':day);document.getElementById(`${key}Icon`)?.replaceChildren(icon);document.getElementById(`${key}Temp`)?.replaceChildren(`${Math.round(c.temperature_2m)}°`);document.getElementById(`${key}Weather`)?.replaceChildren(text)}
 async function refresh(){const s=document.getElementById('weatherUpdated');try{await Promise.all([weather('norway'),weather('cebu')]);if(s)s.textContent='Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}catch{if(s)s.textContent='Weather unavailable'}}
 function script(src){return new Promise(resolve=>{const s=document.createElement('script');s.src=src;s.async=false;s.onload=resolve;s.onerror=resolve;document.body.appendChild(s)})}
-clocks();setInterval(clocks,1000);refresh();setInterval(refresh,900000);
+function stylesheet(href){const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)}
+clocks();setInterval(clocks,1000);refresh();setInterval(refresh,900000);stylesheet('/dashboard-v9.css?v=12');stylesheet('/dashboard-unified.css?v=12');
 (async()=>{await script('/public-sync.js?v=12');await script('/dashboard-unified.js?v=12')})();
 })();
