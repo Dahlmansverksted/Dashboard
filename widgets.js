@@ -1,4 +1,6 @@
 (()=>{
+const manifestLink=document.createElement('link');manifestLink.rel='manifest';manifestLink.href='/manifest.json?v=20260801-1';document.head.appendChild(manifestLink);
+const appIcon=document.createElement('link');appIcon.rel='apple-touch-icon';appIcon.href='/assets/dahlmans-logo.svg?v=20260801-1';document.head.appendChild(appIcon);
 const css=`
 .world-widget{margin-top:15px;padding:20px;border:1px solid rgba(255,255,255,.12);border-radius:22px;background:linear-gradient(145deg,rgba(25,25,28,.78),rgba(12,12,14,.68));backdrop-filter:blur(18px);box-shadow:0 18px 50px rgba(0,0,0,.24)}
 .world-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.place-card{padding:18px;border-radius:18px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)}
