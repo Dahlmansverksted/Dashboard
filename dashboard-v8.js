@@ -1,17 +1,30 @@
 (()=>{
 'use strict';
-const LOGO='/assets/icon-192-ivory.png';
+const LOGO='/assets/icon-192-ivory.png?v=11';
+const LOGO_FALLBACK='/assets/dahlmans-logo-192.png?v=11';
 const PHOTOS=Array.from({length:9},(_,i)=>`/assets/background-${String(i+1).padStart(2,'0')}.jpg`);
 const PAGE_TITLE='Welcome Mr. and Mrs. Dahlman';
 
 function ensureHead(){
  document.title=PAGE_TITLE;
  const upsert=(rel,href,type)=>{let el=document.querySelector(`link[rel="${rel}"]`);if(!el){el=document.createElement('link');el.rel=rel;document.head.appendChild(el)}el.href=href;if(type)el.type=type};
- upsert('icon','/assets/favicon.ico?v=10','image/x-icon');
- upsert('shortcut icon','/assets/favicon.ico?v=10','image/x-icon');
- upsert('apple-touch-icon','/assets/icon-192-ivory.png?v=10','image/png');
- upsert('manifest','/manifest.json?v=10');
- let theme=document.querySelector('meta[name="theme-color"]');if(!theme){theme=document.createElement('meta');theme.name='theme-color';document.head.appendChild(theme)}theme.content='#12100F';
+ upsert('icon','/assets/favicon.ico?v=11','image/x-icon');
+ upsert('apple-touch-icon','/assets/icon-192-ivory.png?v=11','image/png');
+ upsert('manifest','/manifest.json?v=11');
+ if(!document.getElementById('v8-critical-fixes')){
+   const style=document.createElement('style');
+   style.id='v8-critical-fixes';
+   style.textContent=`
+     .shell>aside{overflow-x:hidden!important;min-width:0!important}
+     .shell>aside nav{overflow-x:hidden!important;overflow-y:auto!important;min-width:0!important;max-width:100%!important;scrollbar-width:thin}
+     .shell>aside .nav{min-width:0!important;max-width:100%!important;width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important}
+     .shell>aside .brand{min-width:0!important;overflow:hidden!important}
+     .shell>aside .brand span{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+     .shell>aside .brand-logo{display:block!important;flex:0 0 46px!important;width:46px!important;height:46px!important;object-fit:contain!important;border-radius:12px!important;background:transparent!important}
+     @media(max-width:700px){.shell>aside .brand-logo{width:42px!important;height:42px!important;flex-basis:42px!important}}
+   `;
+   document.head.appendChild(style);
+ }
 }
 function ensureDaily(){
  if(typeof data==='undefined')return;
@@ -22,7 +35,11 @@ function ensureDaily(){
 }
 function brand(){
  const b=document.querySelector('.brand');
- if(b)b.innerHTML=`<img class="brand-logo" src="${LOGO}?v=10" alt="Dahlmans Verksted"><span><strong>Dashboard</strong></span>`;
+ if(b){
+   b.innerHTML=`<img class="brand-logo" src="${LOGO}" alt="Dahlmans Verksted"><span><strong>Dashboard</strong></span>`;
+   const img=b.querySelector('.brand-logo');
+   if(img)img.onerror=()=>{if(!img.dataset.fallback){img.dataset.fallback='1';img.src=LOGO_FALLBACK}};
+ }
  const calc=document.querySelector('.nav[data-page="calculator"] span');if(calc)calc.textContent='Dahlmans Verksted';
  const title=document.getElementById('title');if(title)title.textContent='';
 }
@@ -42,7 +59,7 @@ function ensureCarousel(){
  let wrap=page.querySelector('.v8-home-top');
  if(!wrap){wrap=document.createElement('div');wrap.className='v8-home-top';hero.parentNode.insertBefore(wrap,hero);wrap.appendChild(hero)}
  let carousel=wrap.querySelector('.v8-carousel');
- if(!carousel){carousel=document.createElement('section');carousel.className='v8-carousel';carousel.innerHTML='<img alt="Our moments" class="active"><img alt="Our moments"><span>OUR MOMENTS</span>';wrap.appendChild(carousel);let idx=0,layer=0;const imgs=[...carousel.querySelectorAll('img')];imgs[0].src=PHOTOS[0];imgs[1].src=PHOTOS[1];PHOTOS.forEach(src=>{const i=new Image();i.src=src});setInterval(()=>{const next=(idx+1)%PHOTOS.length,incoming=imgs[1-layer],outgoing=imgs[layer];incoming.src=PHOTOS[next]+'?v=9';incoming.onload=()=>{incoming.classList.add('active');outgoing.classList.remove('active');idx=next;layer=1-layer}},12000)}
+ if(!carousel){carousel=document.createElement('section');carousel.className='v8-carousel';carousel.innerHTML='<img alt="Our moments" class="active"><img alt="Our moments"><span>OUR MOMENTS</span>';wrap.appendChild(carousel);let idx=0,layer=0;const imgs=[...carousel.querySelectorAll('img')];imgs[0].src=PHOTOS[0];imgs[1].src=PHOTOS[1];PHOTOS.forEach(src=>{const i=new Image();i.src=src});setInterval(()=>{const next=(idx+1)%PHOTOS.length,incoming=imgs[1-layer],outgoing=imgs[layer];incoming.src=PHOTOS[next]+'?v=11';incoming.onload=()=>{incoming.classList.add('active');outgoing.classList.remove('active');idx=next;layer=1-layer}},12000)}
 }
 function mobileMenu(){
  document.querySelectorAll('.legacy-bottom-nav,.bottom-nav,#bottomNav').forEach(x=>x.remove());
