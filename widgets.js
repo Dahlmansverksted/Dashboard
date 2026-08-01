@@ -7,5 +7,5 @@ async function weather(key){const p=places[key],r=await fetch(`https://api.open-
 async function refresh(){const s=document.getElementById('weatherUpdated');try{await Promise.all([weather('norway'),weather('cebu')]);if(s)s.textContent='Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}catch{if(s)s.textContent='Weather unavailable'}}
 function script(src){return new Promise(resolve=>{const s=document.createElement('script');s.src=src;s.async=false;s.onload=resolve;s.onerror=resolve;document.body.appendChild(s)})}
 clocks();setInterval(clocks,1000);refresh();setInterval(refresh,900000);
-(async()=>{await script('/public-sync.js?v=8');await script('/dashboard-v4.js?v=8');await script('/dashboard-v5.js?v=8');await script('/dashboard-v8.js?v=8')})();
+(async()=>{await script('/public-sync.js?v=9');await script('/dashboard-v4.js?v=9');await script('/dashboard-v5.js?v=9');await script('/dashboard-v8.js?v=9');await script('/dashboard-v9.js?v=9')})();
 })();
