@@ -1,0 +1,19 @@
+{
+  "name": "Dahlman Dashboard",
+  "short_name": "Dashboard",
+  "description": "Personal dashboard for Mr. and Mrs. Dahlman",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0B0B0B",
+  "theme_color": "#0B0B0B",
+  "icons": [
+    {
+      "src": "/assets/dahlmans-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
