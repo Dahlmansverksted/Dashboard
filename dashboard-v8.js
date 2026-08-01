@@ -43,6 +43,10 @@ function brand(){
  const calc=document.querySelector('.nav[data-page="calculator"] span');if(calc)calc.textContent='Dahlmans Verksted';
  const title=document.getElementById('title');if(title)title.textContent='';
 }
+function removeQuickAdd(){
+ const quick=document.getElementById('quick');
+ if(quick)quick.remove();
+}
 function mergeDateIntoWeather(){
  const today=document.getElementById('today');
  const world=document.querySelector('#dashboard .world-widget');
@@ -76,7 +80,7 @@ function equalBudget(){
 function removeDuplicateNav(){
  document.querySelectorAll('body>nav,main+nav,.mobile-bottom-nav').forEach(el=>{if(!el.closest('aside'))el.remove()});
 }
-function apply(){ensureHead();ensureDaily();brand();ensureCarousel();mergeDateIntoWeather();mobileMenu();equalBudget();removeDuplicateNav()}
+function apply(){ensureHead();ensureDaily();brand();removeQuickAdd();ensureCarousel();mergeDateIntoWeather();mobileMenu();equalBudget();removeDuplicateNav()}
 const run=()=>requestAnimationFrame(apply);
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 const oldRender=window.render;if(typeof oldRender==='function')window.render=function(){ensureDaily();const r=oldRender.apply(this,arguments);run();return r};
