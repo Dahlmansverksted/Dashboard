@@ -1,15 +1,17 @@
 (()=>{
 'use strict';
-const LOGO='/assets/dahlmans-logo.svg';
+const LOGO='/assets/icon-192-ivory.png';
 const PHOTOS=Array.from({length:9},(_,i)=>`/assets/background-${String(i+1).padStart(2,'0')}.jpg`);
 const PAGE_TITLE='Welcome Mr. and Mrs. Dahlman';
 
 function ensureHead(){
  document.title=PAGE_TITLE;
  const upsert=(rel,href,type)=>{let el=document.querySelector(`link[rel="${rel}"]`);if(!el){el=document.createElement('link');el.rel=rel;document.head.appendChild(el)}el.href=href;if(type)el.type=type};
- upsert('icon','/assets/dahlmans-logo-192.png?v=9','image/png');
- upsert('apple-touch-icon','/assets/dahlmans-logo-192.png?v=9');
- upsert('manifest','/manifest.json?v=9');
+ upsert('icon','/assets/favicon.ico?v=10','image/x-icon');
+ upsert('shortcut icon','/assets/favicon.ico?v=10','image/x-icon');
+ upsert('apple-touch-icon','/assets/icon-192-ivory.png?v=10','image/png');
+ upsert('manifest','/manifest.json?v=10');
+ let theme=document.querySelector('meta[name="theme-color"]');if(!theme){theme=document.createElement('meta');theme.name='theme-color';document.head.appendChild(theme)}theme.content='#12100F';
 }
 function ensureDaily(){
  if(typeof data==='undefined')return;
@@ -20,7 +22,7 @@ function ensureDaily(){
 }
 function brand(){
  const b=document.querySelector('.brand');
- if(b)b.innerHTML=`<img class="brand-logo" src="${LOGO}" alt="Dahlmans Verksted"><span><strong>Dashboard</strong></span>`;
+ if(b)b.innerHTML=`<img class="brand-logo" src="${LOGO}?v=10" alt="Dahlmans Verksted"><span><strong>Dashboard</strong></span>`;
  const calc=document.querySelector('.nav[data-page="calculator"] span');if(calc)calc.textContent='Dahlmans Verksted';
  const title=document.getElementById('title');if(title)title.textContent='';
 }
