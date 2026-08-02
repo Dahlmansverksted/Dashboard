@@ -2,6 +2,7 @@
 let lastRemoteUpdate="";
 let syncing=false;
 let saveTimer=null;
+let lastLocalChangeAt=0;
 
 function setStatus(text,state=""){
   const el=document.getElementById("cloudStatus");
@@ -18,6 +19,14 @@ function mergeById(local=[],remote=[]){
   return [...map.values()];
 }
 
+function mergeDailyDone(local={},remote={}){
+  const merged={...local};
+  for(const [date,ids] of Object.entries(remote||{})){
+    merged[date]=[...new Set([...(merged[date]||[]),...(ids||[])])];
+  }
+  return merged;
+}
+
 function mergeInitial(local,remote){
   const merged={...local,...remote};
   merged.daily=mergeById(local.daily,remote.daily);
@@ -30,11 +39,19 @@ function mergeInitial(local,remote){
     const b=(remote.shoppingLists||[]).find(x=>x.id===list.id);
     return {...list,items:mergeById(a?.items||[],b?.items||[])};
   });
-  merged.dailyDone={...(local.dailyDone||{})};
-  for(const [date,ids] of Object.entries(remote.dailyDone||{})){
-    merged.dailyDone[date]=[...new Set([...(merged.dailyDone[date]||[]),...(ids||[])])];
-  }
+  merged.dailyDone=mergeDailyDone(local.dailyDone,remote.dailyDone);
   return migrate(merged);
+}
+
+/* The legacy V3 polling loop still calls mergeData. Keep local Daily clicks
+   from being replaced by a slightly older server copy. */
+if(typeof mergeData==="function"){
+  const legacyMergeData=mergeData;
+  mergeData=function(local,remote){
+    const out=legacyMergeData(local,remote);
+    out.dailyDone=mergeDailyDone(local?.dailyDone,remote?.dailyDone);
+    return out;
+  };
 }
 
 async function request(method="GET",body){
@@ -67,6 +84,8 @@ async function upload(){
 
 async function pull({initial=false}={}){
   if(syncing)return;
+  /* Never let a poll replace a checkbox interaction that is still being saved. */
+  if(!initial&&Date.now()-lastLocalChangeAt<1800)return;
   syncing=true;
   try{
     const remote=await request();
@@ -85,7 +104,9 @@ async function pull({initial=false}={}){
       return;
     }
     if(remote.updatedAt&&remote.updatedAt!==lastRemoteUpdate){
-      data=migrate(remote.data);
+      const next=migrate(remote.data);
+      next.dailyDone=mergeDailyDone(data.dailyDone,next.dailyDone);
+      data=next;
       localStorage.setItem(KEY,JSON.stringify(data));
       lastRemoteUpdate=remote.updatedAt;
       render();
@@ -102,6 +123,7 @@ async function pull({initial=false}={}){
 
 const originalSave=save;
 save=function(message){
+  lastLocalChangeAt=Date.now();
   localStorage.setItem(KEY,JSON.stringify(data));
   render();
   if(message)toast(message);
