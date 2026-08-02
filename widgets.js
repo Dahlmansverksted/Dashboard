@@ -15,5 +15,5 @@ function installChartStyles(){if(document.getElementById('chart-legend-fix'))ret
 @media(max-width:430px){.chart-legend{grid-template-columns:1fr}}
 `;document.head.appendChild(style)}
 clocks();setInterval(clocks,1000);refresh();setInterval(refresh,900000);
-(async()=>{await script('/public-sync.js?v=15');ensureRenderTargets();installChartStyles();await script('/dashboard-unified.js?v=15')})();
+(async()=>{await script('/public-sync.js?v=16');ensureRenderTargets();installChartStyles();await script('/dashboard-unified.js?v=16');await script('/goals.js?v=16')})();
 })();
