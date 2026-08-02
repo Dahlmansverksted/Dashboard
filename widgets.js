@@ -7,33 +7,15 @@ async function weather(key){const p=places[key],r=await fetch(`https://api.open-
 async function refresh(){const s=document.getElementById('weatherUpdated');try{await Promise.all([weather('norway'),weather('cebu')]);if(s)s.textContent='Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}catch{if(s)s.textContent='Weather unavailable'}}
 function script(src){return new Promise(resolve=>{const s=document.createElement('script');s.src=src;s.async=false;s.onload=resolve;s.onerror=resolve;document.body.appendChild(s)})}
 const renderTargetIds=['dateList','nextDate','nextCountdown','homeDaysSince'];
-function ensureRenderTargets(){
- for(const id of renderTargetIds){
-  if(document.getElementById(id))continue;
-  const el=document.createElement('div');
-  el.id=id;
-  el.hidden=true;
-  el.setAttribute('aria-hidden','true');
-  el.dataset.compatTarget='true';
-  document.body.appendChild(el);
- }
-}
-function watchRenderTargets(){
- ensureRenderTargets();
- const observer=new MutationObserver(()=>ensureRenderTargets());
- observer.observe(document.documentElement,{childList:true,subtree:true});
- window.__renderTargetObserver=observer;
-}
+function ensureRenderTargets(){for(const id of renderTargetIds){if(document.getElementById(id))continue;const el=document.createElement('div');el.id=id;el.hidden=true;el.setAttribute('aria-hidden','true');el.dataset.compatTarget='true';document.body.appendChild(el)}}
+function watchRenderTargets(){ensureRenderTargets();const observer=new MutationObserver(()=>ensureRenderTargets());observer.observe(document.documentElement,{childList:true,subtree:true});window.__renderTargetObserver=observer}
 function installRuntimeStyles(){if(document.getElementById('runtime-style-fixes'))return;const style=document.createElement('style');style.id='runtime-style-fixes';style.textContent=`
-body{background:radial-gradient(circle at 78% 4%,rgba(216,176,139,.20),transparent 36%),radial-gradient(circle at 14% 86%,rgba(155,105,68,.16),transparent 40%),#1c1815!important}
-#backgroundSlideshow{background:radial-gradient(circle at 70% 0%,rgba(155,105,68,.24),transparent 38%),#1c1815!important}
-.bg-overlay{background:linear-gradient(90deg,rgba(12,11,10,.66) 0,rgba(20,17,15,.52) 38%,rgba(24,20,17,.45) 72%,rgba(14,12,11,.56) 100%)!important}
 .chart-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(216,176,139,.12)}
 .chart-legend span{display:inline-flex;align-items:center;gap:7px;color:var(--muted);font-size:11px;line-height:1.4}
 .chart-legend i{display:block;width:8px;height:8px;border-radius:50%;flex:0 0 8px}
-@media(max-width:700px){.chart-legend{display:grid;grid-template-columns:1fr 1fr;gap:9px}.bg-overlay{background:rgba(18,15,13,.58)!important}}
+@media(max-width:700px){.chart-legend{display:grid;grid-template-columns:1fr 1fr;gap:9px}}
 @media(max-width:430px){.chart-legend{grid-template-columns:1fr}}
 `;document.head.appendChild(style)}
 clocks();setInterval(clocks,1000);refresh();setInterval(refresh,900000);installRuntimeStyles();watchRenderTargets();
-(async()=>{await script('/public-sync.js?v=19');ensureRenderTargets();await script('/dashboard-unified.js?v=19');ensureRenderTargets();await script('/goals.js?v=19');ensureRenderTargets()})();
+(async()=>{await script('/public-sync.js?v=20');ensureRenderTargets();await script('/dashboard-unified.js?v=20');ensureRenderTargets();await script('/goals.js?v=20');ensureRenderTargets();await script('/dashboard-fixes.js?v=20');ensureRenderTargets()})();
 })();
