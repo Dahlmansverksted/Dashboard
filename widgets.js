@@ -45,10 +45,10 @@ function installRuntimeStyles(){if(document.getElementById('runtime-style-fixes'
 clocks();setInterval(clocks,1000);refresh();setInterval(refresh,900000);installRuntimeStyles();watchRenderTargets();
 (async()=>{
  try{
-  await script('/public-sync.js?v=24');ensureRenderTargets();
-  await script('/dashboard-unified.js?v=24');ensureRenderTargets();
-  await script('/goals.js?v=24');ensureRenderTargets();
-  await script('/dashboard-fixes.js?v=24');ensureRenderTargets();
+  await script('/public-sync.js?v=25');ensureRenderTargets();
+  await script('/dashboard-unified.js?v=25');ensureRenderTargets();
+  await script('/goals.js?v=25');ensureRenderTargets();
+  await script('/dashboard-fixes.js?v=25');ensureRenderTargets();
   await new Promise(resolve=>setTimeout(resolve,120));
  }finally{
   clearTimeout(bootFallback);
