@@ -42,6 +42,8 @@ function installStyles(){
  .muscle-card .muscle-chart-wrap{display:block!important;text-align:center}
  #muscleGroupChart{display:block;width:min(100%,620px)!important;height:auto!important;margin:8px auto 0}
  #muscleLegend{display:none!important}
+ #dailyList .check{cursor:pointer;touch-action:manipulation;user-select:none}
+ #dailyList input[data-daily]{pointer-events:auto}
  @media(max-width:700px){.bg-overlay{background:rgba(28,21,17,.34)!important}}
  `;document.head.appendChild(s);
 }
@@ -86,26 +88,6 @@ function drawRadar(){
  });
  if(!values.some(Boolean)){c.textAlign='center';c.fillStyle='#b8aea4';c.font='14px Poppins, sans-serif';c.fillText('No workout data yet',cx,cy)}
 }
-
-function toggleDailyOnce(event){
- const input=event.target.closest('input[data-daily]');
- const label=input?.closest('#dailyList .check');
- const clickedLabel=event.target.closest('#dailyList .check');
- const targetInput=input||clickedLabel?.querySelector('input[data-daily]');
- if(!targetInput)return;
- if(event.type==='click'&&event.detail===0)return;
- event.preventDefault();
- event.stopPropagation();
- event.stopImmediatePropagation();
- const id=targetInput.dataset.daily,k=day();
- data.dailyDone[k]=Array.isArray(data.dailyDone[k])?data.dailyDone[k]:[];
- const currentlyDone=data.dailyDone[k].includes(id);
- data.dailyDone[k]=currentlyDone?data.dailyDone[k].filter(x=>x!==id):[...new Set([...data.dailyDone[k],id])];
- targetInput.checked=!currentlyDone;
- if(typeof save==='function')save();
-}
-
-document.addEventListener('click',toggleDailyOnce,true);
 
 function applyFixes(){
  const changed=ensureWashFace();
