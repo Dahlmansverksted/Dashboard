@@ -45,12 +45,13 @@ function installRuntimeStyles(){if(document.getElementById('runtime-style-fixes'
 clocks();setInterval(clocks,1000);refresh();setInterval(refresh,900000);installRuntimeStyles();watchRenderTargets();
 (async()=>{
  try{
-  await script('/public-sync.js?v=29');ensureRenderTargets();
-  await script('/dashboard-unified.js?v=29');ensureRenderTargets();
-  await script('/goals.js?v=29');ensureRenderTargets();
-  await script('/dashboard-fixes.js?v=29');ensureRenderTargets();
-  await script('/daily-routine.js?v=29');ensureRenderTargets();
-  await script('/gym-radar-mobile-fix.js?v=1');ensureRenderTargets();
+  await script('/public-sync.js?v=30');ensureRenderTargets();
+  await script('/dashboard-unified.js?v=30');ensureRenderTargets();
+  await script('/goals.js?v=30');ensureRenderTargets();
+  await script('/dashboard-fixes.js?v=30');ensureRenderTargets();
+  await script('/daily-routine.js?v=30');ensureRenderTargets();
+  await script('/gym-radar-mobile-fix.js?v=2');ensureRenderTargets();
+  await script('/bm-casino.js?v=1');ensureRenderTargets();
   await new Promise(resolve=>setTimeout(resolve,120));
  }finally{
   clearTimeout(bootFallback);
