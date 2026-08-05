@@ -36,6 +36,7 @@ const renderTargetIds=['dateList','nextDate','nextCountdown','homeDaysSince'];
 function ensureRenderTargets(){for(const id of renderTargetIds){if(document.getElementById(id))continue;const el=document.createElement('div');el.id=id;el.hidden=true;el.setAttribute('aria-hidden','true');el.dataset.compatTarget='true';document.body.appendChild(el)}}
 function watchRenderTargets(){ensureRenderTargets();const observer=new MutationObserver(()=>ensureRenderTargets());observer.observe(document.documentElement,{childList:true,subtree:true});window.__renderTargetObserver=observer}
 function installRuntimeStyles(){if(document.getElementById('runtime-style-fixes'))return;const style=document.createElement('style');style.id='runtime-style-fixes';style.textContent=`
+.v8-carousel,.image-carousel,.carousel-widget,[data-carousel-widget]{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
 .chart-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(216,176,139,.12)}
 .chart-legend span{display:inline-flex;align-items:center;gap:7px;color:var(--muted);font-size:11px;line-height:1.4}
 .chart-legend i{display:block;width:8px;height:8px;border-radius:50%;flex:0 0 8px}
@@ -45,14 +46,14 @@ function installRuntimeStyles(){if(document.getElementById('runtime-style-fixes'
 clocks();setInterval(clocks,1000);refresh();setInterval(refresh,900000);installRuntimeStyles();watchRenderTargets();
 (async()=>{
  try{
-  await script('/public-sync.js?v=30');ensureRenderTargets();
-  await script('/dashboard-unified.js?v=30');ensureRenderTargets();
-  await script('/goals.js?v=30');ensureRenderTargets();
-  await script('/dashboard-fixes.js?v=30');ensureRenderTargets();
-  await script('/daily-routine.js?v=30');ensureRenderTargets();
-  await script('/gym-radar-mobile-fix.js?v=2');ensureRenderTargets();
-  await script('/bm-casino.js?v=2');ensureRenderTargets();
-  await script('/hero-background-picker.js?v=1');ensureRenderTargets();
+  await script('/public-sync.js?v=31');ensureRenderTargets();
+  await script('/dashboard-unified.js?v=31');ensureRenderTargets();
+  await script('/goals.js?v=31');ensureRenderTargets();
+  await script('/dashboard-fixes.js?v=31');ensureRenderTargets();
+  await script('/daily-routine.js?v=31');ensureRenderTargets();
+  await script('/gym-radar-mobile-fix.js?v=3');ensureRenderTargets();
+  await script('/bm-casino.js?v=3');ensureRenderTargets();
+  await script('/hero-background-picker.js?v=3');ensureRenderTargets();
   await new Promise(resolve=>setTimeout(resolve,120));
  }finally{
   clearTimeout(bootFallback);
