@@ -52,6 +52,7 @@ clocks();setInterval(clocks,1000);refresh();setInterval(refresh,900000);installR
   await script('/daily-routine.js?v=30');ensureRenderTargets();
   await script('/gym-radar-mobile-fix.js?v=2');ensureRenderTargets();
   await script('/bm-casino.js?v=2');ensureRenderTargets();
+  await script('/hero-background-picker.js?v=1');ensureRenderTargets();
   await new Promise(resolve=>setTimeout(resolve,120));
  }finally{
   clearTimeout(bootFallback);
