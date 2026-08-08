@@ -2,8 +2,36 @@
 'use strict';
 
 const shell=document.querySelector('.shell');
+const splashStarted=performance.now();
 let dashboardRevealed=false;
+
+function installSplash(){
+ if(document.getElementById('appBootSplash'))return;
+ const style=document.createElement('style');
+ style.id='app-boot-splash-style';
+ style.textContent=`
+ #appBootSplash{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;background:#0d0d0f;color:#f4eee8;opacity:1;visibility:visible;transition:opacity .32s ease,visibility .32s ease;font-family:Poppins,system-ui,-apple-system,sans-serif}
+ #appBootSplash.hide{opacity:0;visibility:hidden;pointer-events:none}
+ .app-boot-inner{display:grid;justify-items:center;gap:15px;padding:28px;text-align:center}
+ .app-boot-logo{width:76px;height:76px;object-fit:contain;filter:drop-shadow(0 10px 28px rgba(0,0,0,.28));animation:bootLogo 1.8s ease-in-out infinite}
+ .app-boot-title{font-size:15px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:#f4eee8}
+ .app-boot-sub{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8f8780}
+ .app-boot-bar{width:150px;height:3px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.09);margin-top:4px}
+ .app-boot-bar i{display:block;width:42%;height:100%;border-radius:inherit;background:#d8b08b;animation:bootBar 1.05s ease-in-out infinite}
+ @keyframes bootBar{0%{transform:translateX(-110%)}55%{transform:translateX(110%)}100%{transform:translateX(260%)}}
+ @keyframes bootLogo{0%,100%{transform:translateY(0);opacity:.92}50%{transform:translateY(-3px);opacity:1}}
+ @media(prefers-reduced-motion:reduce){.app-boot-logo,.app-boot-bar i{animation:none}.app-boot-bar i{width:100%}}
+ `;
+ document.head.appendChild(style);
+ const splash=document.createElement('div');
+ splash.id='appBootSplash';
+ splash.setAttribute('role','status');
+ splash.setAttribute('aria-label','Loading Dahlman Dashboard');
+ splash.innerHTML=`<div class="app-boot-inner"><img class="app-boot-logo" src="/assets/icon-192-ivory.png" alt=""><div class="app-boot-title">Dahlman Dashboard</div><div class="app-boot-sub">Loading your dashboard</div><div class="app-boot-bar"><i></i></div></div>`;
+ document.body.appendChild(splash);
+}
 function hideDashboardDuringBoot(){
+ installSplash();
  if(!shell)return;
  shell.style.visibility='hidden';
  shell.style.opacity='0';
@@ -12,19 +40,26 @@ function hideDashboardDuringBoot(){
 function revealDashboard(){
  if(dashboardRevealed)return;
  dashboardRevealed=true;
- if(!shell)return;
- requestAnimationFrame(()=>requestAnimationFrame(()=>{
-  shell.style.visibility='visible';
-  shell.style.opacity='1';
-  setTimeout(()=>{
-   shell.style.removeProperty('visibility');
-   shell.style.removeProperty('opacity');
-   shell.style.removeProperty('transition');
-  },220);
- }));
+ const elapsed=performance.now()-splashStarted;
+ const delay=Math.max(0,650-elapsed);
+ setTimeout(()=>{
+  if(shell){
+   requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    shell.style.visibility='visible';
+    shell.style.opacity='1';
+    setTimeout(()=>{
+     shell.style.removeProperty('visibility');
+     shell.style.removeProperty('opacity');
+     shell.style.removeProperty('transition');
+    },220);
+   }));
+  }
+  const splash=document.getElementById('appBootSplash');
+  if(splash){splash.classList.add('hide');setTimeout(()=>splash.remove(),380)}
+ },delay);
 }
 hideDashboardDuringBoot();
-const bootFallback=setTimeout(revealDashboard,6000);
+const bootFallback=setTimeout(revealDashboard,6500);
 
 const places={norway:{lat:59.9139,lon:10.7522,tz:'Europe/Oslo'},cebu:{lat:10.3157,lon:123.8854,tz:'Asia/Manila'}};
 const labels={0:['Clear','☀️'],1:['Mostly clear','🌤️'],2:['Partly cloudy','⛅'],3:['Cloudy','☁️'],45:['Fog','🌫️'],48:['Fog','🌫️'],51:['Drizzle','🌦️'],53:['Drizzle','🌦️'],55:['Heavy drizzle','🌧️'],61:['Light rain','🌦️'],63:['Rain','🌧️'],65:['Heavy rain','🌧️'],71:['Snow','🌨️'],73:['Snow','🌨️'],75:['Heavy snow','❄️'],80:['Showers','🌦️'],81:['Showers','🌧️'],82:['Heavy showers','⛈️'],95:['Thunderstorm','⛈️'],96:['Thunderstorm','⛈️'],99:['Thunderstorm','⛈️']};
@@ -46,15 +81,15 @@ function installRuntimeStyles(){if(document.getElementById('runtime-style-fixes'
 clocks();setInterval(clocks,1000);refresh();setInterval(refresh,900000);installRuntimeStyles();watchRenderTargets();
 (async()=>{
  try{
-  await script('/public-sync.js?v=31');ensureRenderTargets();
-  await script('/dashboard-unified.js?v=31');ensureRenderTargets();
-  await script('/goals.js?v=31');ensureRenderTargets();
-  await script('/dashboard-fixes.js?v=31');ensureRenderTargets();
-  await script('/daily-routine.js?v=31');ensureRenderTargets();
-  await script('/gym-radar-mobile-fix.js?v=3');ensureRenderTargets();
-  await script('/bm-casino.js?v=3');ensureRenderTargets();
-  await script('/hero-background-picker.js?v=3');ensureRenderTargets();
-  await new Promise(resolve=>setTimeout(resolve,120));
+  await script('/public-sync.js?v=32');ensureRenderTargets();
+  await script('/dashboard-unified.js?v=32');ensureRenderTargets();
+  await script('/goals.js?v=32');ensureRenderTargets();
+  await script('/dashboard-fixes.js?v=32');ensureRenderTargets();
+  await script('/daily-routine.js?v=32');ensureRenderTargets();
+  await script('/gym-radar-mobile-fix.js?v=4');ensureRenderTargets();
+  await script('/bm-casino.js?v=4');ensureRenderTargets();
+  await script('/hero-background-picker.js?v=4');ensureRenderTargets();
+  await new Promise(resolve=>setTimeout(resolve,140));
  }finally{
   clearTimeout(bootFallback);
   revealDashboard();
